@@ -8,6 +8,8 @@ group :development do
   gem 'awesome_print'
   gem 'debugger'
   gem 'thin'
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 group :test do
@@ -33,3 +35,7 @@ gem 'jquery-rails'
 gem "cancan", "~> 1.6"
 gem "devise_json_csrf", '0.1', git: 'https://github.com/Dan2552/devise_json_csrf.git'
 gem "capistrano", "~> 2.14"
+gem "gravtastic", "~> 3.2.6"
+gem 'better_errors'
+gem 'binding_of_caller'
+gem "active_model_serializers", "~> 0.8.1"
