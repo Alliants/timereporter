@@ -5,7 +5,8 @@ class Project < ActiveRecord::Base
 
   validates :title, presence: true
 
-  scope :ordered_by_title, order: 'title ASC'
+  scope :ordered_by_title, -> { order(title: :asc) }
+  scope :active, -> { where(status: 'Active') }
 
   def self.filter(key)
     where(key.to_sym => key.to_s.titleize) if FILTERABLE.include?(key)
@@ -34,10 +35,10 @@ class Project < ActiveRecord::Base
   end
 
   def self.client_group
-    clients = Project.all.map(&:client_name).uniq.sort
+    clients = Project.active.all.map(&:client_name).uniq.sort
     collection = clients.map do |client|
       client_company = client if client.present?
-      OpenStruct.new(name: client, projects: Project.where(client_company: client_company))
+      OpenStruct.new(name: client, projects: Project.active.where(client_company: client_company))
     end
   end
 

@@ -1,6 +1,6 @@
 class PodioProjectFetcher
   class << self
-    attr_accessor :auth_key, :auth_secret 
+    attr_accessor :auth_key, :auth_secret
   end
 
   def initialize(args = {})
@@ -27,7 +27,7 @@ class PodioProjectFetcher
   end
 
   def remote_projects
-    Podio::Item.find_all(2226608, :limit => 500)[0]
+    Podio::Item.find_all(12655145, :limit => 500)[0]
   end
 
 end

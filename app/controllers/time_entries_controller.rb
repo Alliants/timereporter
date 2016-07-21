@@ -4,28 +4,33 @@ class TimeEntriesController < ApplicationController
 
   def index
     date_param
-    @time_entries = TimeEntry.for(current_user).for_date(@date).to_a
+    @time_entries = current_user.time_entries.for_date(@date).to_a
     respond_with(@time_entries)
   end
 
   def create
-    if params[:time_entries].present?
-      @time_entries = current_user.time_entries.create(params[:time_entries].values)
-    elsif params[:time_entry].present?
-      @time_entry = current_user.time_entries.create(params[:time_entry])
+    if time_entries_params.present?
+      @time_entries = current_user.time_entries.create(time_entries_params.fetch(:time_entries).values)
+    elsif time_entry_params.present?
+      @time_entry = current_user.time_entries.create(time_entry_params)
     end
   end
 
   def update
-    @time_entry.update_attributes(params[:time_entry])
+    @time_entry.update_attributes(time_entry_params)
   end
 
   def update_many
-    if params[:time_entry][:project_id].blank?
-      params[:time_entry][:project_id] = nil
-    end
-    TimeEntry.where(id: params[:time_entries]).update_all(project_id: params[:time_entry][:project_id], comment: params[:time_entry][:comment])
-    @time_entries = TimeEntry.find(params[:time_entries])
+    byebug
+    # if time_entry.fetch(:project_id).blank?
+    #   time_entry.project_id = nil
+    # end
+    #
+    # TimeEntry
+    #   .where(id: time_entries_params)
+    #   .update_all(project_id: time_entry.fetch(:project_id), comment: time_entry.fetch(:comment))
+    #
+    # @time_entries = TimeEntry.find(time_entries_params)
   end
 
   def destroy
@@ -38,6 +43,21 @@ class TimeEntriesController < ApplicationController
   end
 
   def edit
+  end
+
+  private
+
+  def time_entry
+    params.fetch(:time_entry)
+  end
+
+  def time_entries_params
+    params.permit(time_entries: [:id, :entry_datetime, :duration])
+  end
+
+  def time_entry_params
+    params.require(:time_entry)
+      .permit(:id, :entry_datetime, :duration, :project_id, :comment)
   end
 
 end
